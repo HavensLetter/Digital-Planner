@@ -1,50 +1,118 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Weekly Planner</title>
-  <link rel="stylesheet" href="daily/styles.css">
+  <meta charset="UTF-8" />
+  <title>Weekly Planner - Haven's Letter</title>
+  <link rel="stylesheet" href="styles.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 </head>
 <body>
-  <div class="navbar">
-    <a href="daily.html">Daily</a>
-    <a href="weekly.html">Weekly</a>
-    <a href="notes.html">Notes</a>
-  </div>
+  <nav class="navbar">
+    <a href="daily.html" class="nav-link">Daily</a>
+    <a href="weekly.html" class="nav-link active">Weekly</a>
+    <a href="notes.html" class="nav-link">Notes</a>
+  </nav>
 
-  <main>
-    <h1>This Week's Focus</h1>
-    <ul id="task-list"></ul>
+  <main class="container">
+    <header>
+      <h1>Weekly Planner</h1>
+      <p id="week-date-range"></p>
+    </header>
+
+    <section class="tasks-section">
+      <h2>This Week's Tasks</h2>
+      <ul id="weekly-task-list" class="task-list"></ul>
+    </section>
+
+    <section class="habits-section">
+      <h2>
+        Weekly Habits
+        <button id="toggle-habits" aria-expanded="false" aria-controls="weekly-habits-list" class="toggle-btn">▶</button>
+      </h2>
+      <ul id="weekly-habits-list" class="task-list collapsed">
+        <li><label><input type="checkbox" /> Meal prep 3x</label></li>
+        <li><label><input type="checkbox" /> Clean living area</label></li>
+        <li><label><input type="checkbox" /> Call family/friends</label></li>
+      </ul>
+    </section>
+
+    <section class="notes-section">
+      <h2>
+        Weekly Notes
+        <button id="toggle-notes" aria-expanded="false" aria-controls="weekly-notes-textarea" class="toggle-btn">▶</button>
+      </h2>
+      <textarea id="weekly-notes-textarea" class="collapsed" placeholder="Your weekly thoughts..."></textarea>
+    </section>
   </main>
 
   <script>
-    const tasks = [
-      "Clean kitchen",
-      "Finish reading a book",
-      "Call your doctor",
-      "Set weekly goals",
-      "Do laundry",
-      "Review budget"
+    // Helper: Get current week's date range
+    function getWeekRange() {
+      const now = new Date();
+      const day = now.getDay();
+      const diffToMonday = now.getDate() - day + (day === 0 ? -6 : 1);
+      const monday = new Date(now.setDate(diffToMonday));
+      const sunday = new Date(monday);
+      sunday.setDate(monday.getDate() + 6);
+
+      const options = { month: 'short', day: 'numeric' };
+      return monday.toLocaleDateString(undefined, options) + ' - ' + sunday.toLocaleDateString(undefined, options);
+    }
+
+    document.getElementById('week-date-range').textContent = getWeekRange();
+
+    // Weekly tasks data
+    const weeklyTasks = [
+      "Plan weekly goals",
+      "Grocery shopping",
+      "Pay bills",
+      "Workout 3x",
+      "Read a book chapter",
+      "Self-care day"
     ];
 
-    const list = document.getElementById("task-list");
-    tasks.forEach((task, index) => {
+    // Render weekly tasks
+    const weeklyList = document.getElementById("weekly-task-list");
+    weeklyTasks.forEach((task, i) => {
       const li = document.createElement("li");
-      const checked = localStorage.getItem('weekly_cb_' + index) === 'true';
-      li.innerHTML = `<input type="checkbox" ${checked ? 'checked' : ''}> ${task}`;
-      list.appendChild(li);
+      const checked = localStorage.getItem("weekly_task_" + i) === "true";
+      li.innerHTML = `
+        <label>
+          <input type="checkbox" data-index="${i}" ${checked ? "checked" : ""} />
+          ${task}
+        </label>
+      `;
+      weeklyList.appendChild(li);
     });
 
-    document.querySelectorAll('#task-list input[type="checkbox"]').forEach((box, index) => {
-      box.addEventListener('change', () => {
-        localStorage.setItem('weekly_cb_' + index, box.checked);
+    // Save checkbox state for weekly tasks
+    weeklyList.querySelectorAll("input[type=checkbox]").forEach(cb => {
+      cb.addEventListener("change", e => {
+        const idx = e.target.dataset.index;
+        localStorage.setItem("weekly_task_" + idx, e.target.checked);
       });
     });
 
-    document.querySelectorAll('.navbar a').forEach(link => {
-      if (window.location.href.includes(link.getAttribute('href'))) {
-        link.classList.add('active');
-      }
+    // Toggle collapsible sections
+    function setupToggle(btnId, contentId) {
+      const btn = document.getElementById(btnId);
+      const content = document.getElementById(contentId);
+
+      btn.addEventListener("click", () => {
+        const expanded = btn.getAttribute("aria-expanded") === "true";
+        btn.setAttribute("aria-expanded", !expanded);
+        btn.textContent = expanded ? "▶" : "▼";
+        content.classList.toggle("collapsed");
+      });
+    }
+    setupToggle("toggle-habits", "weekly-habits-list");
+    setupToggle("toggle-notes", "weekly-notes-textarea");
+
+    // Save weekly notes
+    const weeklyNotes = document.getElementById("weekly-notes-textarea");
+    weeklyNotes.value = localStorage.getItem("weekly-notes") || "";
+    weeklyNotes.addEventListener("input", () => {
+      localStorage.setItem("weekly-notes", weeklyNotes.value);
     });
   </script>
 </body>

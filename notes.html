@@ -1,34 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Notes</title>
-  <link rel="stylesheet" href="daily/styles.css">
+  <meta charset="UTF-8" />
+  <title>Notes - Haven's Letter</title>
+  <link rel="stylesheet" href="styles.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 </head>
 <body>
-  <div class="navbar">
-    <a href="daily.html">Daily</a>
-    <a href="weekly.html">Weekly</a>
-    <a href="notes.html">Notes</a>
-  </div>
+  <nav class="navbar">
+    <a href="daily.html" class="nav-link">Daily</a>
+    <a href="weekly.html" class="nav-link">Weekly</a>
+    <a href="notes.html" class="nav-link active">Notes</a>
+  </nav>
 
-  <main>
-    <h1>Notes</h1>
-    <textarea id="notes" rows="15" placeholder="Write your thoughts here..."></textarea>
+  <main class="container">
+    <header>
+      <h1>Notes</h1>
+    </header>
+
+    <section class="notes-section" style="padding: 30px 24px;">
+      <textarea id="notes-textarea" placeholder="Write your notes here..." style="height: 400px;"></textarea>
+    </section>
   </main>
 
   <script>
-    const textarea = document.getElementById('notes');
-    textarea.value = localStorage.getItem('notesContent') || "";
-
-    textarea.addEventListener('input', () => {
-      localStorage.setItem('notesContent', textarea.value);
-    });
-
-    document.querySelectorAll('.navbar a').forEach(link => {
-      if (window.location.href.includes(link.getAttribute('href'))) {
-        link.classList.add('active');
-      }
+    const notesTextarea = document.getElementById("notes-textarea");
+    notesTextarea.value = localStorage.getItem("notes-content") || "";
+    notesTextarea.addEventListener("input", () => {
+      localStorage.setItem("notes-content", notesTextarea.value);
     });
   </script>
 </body>
