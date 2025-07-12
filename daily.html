@@ -1,61 +1,111 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Daily Planner</title>
-  <link rel="stylesheet" href="daily/styles.css">
+  <meta charset="UTF-8" />
+  <title>Daily Planner - Haven's Letter</title>
+  <link rel="stylesheet" href="styles.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 </head>
 <body>
-  <div class="navbar">
-    <a href="daily.html">Daily</a>
-    <a href="weekly.html">Weekly</a>
-    <a href="notes.html">Notes</a>
-  </div>
+  <nav class="navbar">
+    <a href="daily.html" class="nav-link active">Daily</a>
+    <a href="weekly.html" class="nav-link">Weekly</a>
+    <a href="notes.html" class="nav-link">Notes</a>
+  </nav>
 
-  <main>
-    <p id="today-date" style="text-align:center; font-weight:bold;"></p>
-    <h1>Today's Tasks</h1>
-    <ul id="task-list"></ul>
+  <main class="container">
+    <header>
+      <h1>Daily Planner</h1>
+      <p id="today-date"></p>
+    </header>
+
+    <section class="tasks-section">
+      <h2>Today's Tasks</h2>
+      <ul id="task-list" class="task-list"></ul>
+    </section>
+
+    <section class="habits-section">
+      <h2>
+        Habits
+        <button id="toggle-habits" aria-expanded="false" aria-controls="habits-list" class="toggle-btn">▶</button>
+      </h2>
+      <ul id="habits-list" class="task-list collapsed">
+        <li><label><input type="checkbox" /> Drink 8 cups of water</label></li>
+        <li><label><input type="checkbox" /> 30 min workout</label></li>
+        <li><label><input type="checkbox" /> Journal for 10 min</label></li>
+      </ul>
+    </section>
+
+    <section class="notes-section">
+      <h2>
+        Notes
+        <button id="toggle-notes" aria-expanded="false" aria-controls="notes-textarea" class="toggle-btn">▶</button>
+      </h2>
+      <textarea id="notes-textarea" class="collapsed" placeholder="Write your thoughts here..."></textarea>
+    </section>
   </main>
 
   <script>
-    // Load today's date
-    const dateElem = document.getElementById("today-date");
-    dateElem.textContent = new Date().toLocaleDateString(undefined, {
-      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-    });
+    // Display today's date
+    const todayDate = document.getElementById("today-date");
+    const options = { weekday: "long", year: "numeric", month: "long", day: "numeric" };
+    todayDate.textContent = new Date().toLocaleDateString(undefined, options);
 
-    // Load task list
+    // Tasks data
     const tasks = [
       "Wake up early",
-      "Drink water",
-      "Review schedule",
-      "Complete top 3 priorities",
-      "Take a walk",
-      "Journal reflection"
+      "Plan meals",
+      "Review calendar",
+      "Focus on top 3 priorities",
+      "Take a short walk",
+      "Evening reflection"
     ];
-    const list = document.getElementById("task-list");
 
-    tasks.forEach((task, index) => {
+    // Render tasks
+    const taskList = document.getElementById("task-list");
+    tasks.forEach((task, i) => {
       const li = document.createElement("li");
-      const checked = localStorage.getItem('daily_cb_' + index) === 'true';
-      li.innerHTML = `<input type="checkbox" ${checked ? 'checked' : ''}> ${task}`;
-      list.appendChild(li);
+      const checked = localStorage.getItem("task_" + i) === "true";
+      li.innerHTML = `
+        <label>
+          <input type="checkbox" data-index="${i}" ${checked ? "checked" : ""} />
+          ${task}
+        </label>
+      `;
+      taskList.appendChild(li);
     });
 
-    // Save checkbox state
-    document.querySelectorAll('#task-list input[type="checkbox"]').forEach((box, index) => {
-      box.addEventListener('change', () => {
-        localStorage.setItem('daily_cb_' + index, box.checked);
+    // Save checkbox states for tasks
+    taskList.querySelectorAll("input[type=checkbox]").forEach(checkbox => {
+      checkbox.addEventListener("change", e => {
+        const idx = e.target.dataset.index;
+        localStorage.setItem("task_" + idx, e.target.checked);
       });
     });
 
-    // Highlight current page
-    document.querySelectorAll('.navbar a').forEach(link => {
-      if (window.location.href.includes(link.getAttribute('href'))) {
-        link.classList.add('active');
-      }
+    // Toggle collapsible sections (Habits & Notes)
+    function setupToggle(buttonId, contentId) {
+      const btn = document.getElementById(buttonId);
+      const content = document.getElementById(contentId);
+
+      btn.addEventListener("click", () => {
+        const expanded = btn.getAttribute("aria-expanded") === "true";
+        btn.setAttribute("aria-expanded", !expanded);
+        btn.textContent = expanded ? "▶" : "▼";
+        content.classList.toggle("collapsed");
+      });
+    }
+    setupToggle("toggle-habits", "habits-list");
+    setupToggle("toggle-notes", "notes-textarea");
+
+    // Save notes content
+    const notesTextarea = document.getElementById("notes-textarea");
+    notesTextarea.value = localStorage.getItem("daily-notes") || "";
+    notesTextarea.addEventListener("input", () => {
+      localStorage.setItem("daily-notes", notesTextarea.value);
     });
+
+    // Navbar active link highlighting handled by server-side / or you can enhance here if needed
   </script>
 </body>
 </html>
