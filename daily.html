@@ -3,21 +3,59 @@
 <head>
   <meta charset="UTF-8">
   <title>Daily Planner</title>
-<link rel="stylesheet" href="daily/styles.css">
+  <link rel="stylesheet" href="daily/styles.css">
+</head>
 <body>
   <div class="navbar">
-    <a href="daily.html" class="active">Daily</a>
+    <a href="daily.html">Daily</a>
     <a href="weekly.html">Weekly</a>
     <a href="notes.html">Notes</a>
   </div>
 
   <main>
+    <p id="today-date" style="text-align:center; font-weight:bold;"></p>
     <h1>Today's Tasks</h1>
-    <ul id="task-list">
-      <li><input type="checkbox"> Wake up early</li>
-      <li><input type="checkbox"> Journal for 10 minutes</li>
-      <li><input type="checkbox"> Plan meals</li>
-    </ul>
+    <ul id="task-list"></ul>
   </main>
+
+  <script>
+    // Load today's date
+    const dateElem = document.getElementById("today-date");
+    dateElem.textContent = new Date().toLocaleDateString(undefined, {
+      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+    });
+
+    // Load task list
+    const tasks = [
+      "Wake up early",
+      "Drink water",
+      "Review schedule",
+      "Complete top 3 priorities",
+      "Take a walk",
+      "Journal reflection"
+    ];
+    const list = document.getElementById("task-list");
+
+    tasks.forEach((task, index) => {
+      const li = document.createElement("li");
+      const checked = localStorage.getItem('daily_cb_' + index) === 'true';
+      li.innerHTML = `<input type="checkbox" ${checked ? 'checked' : ''}> ${task}`;
+      list.appendChild(li);
+    });
+
+    // Save checkbox state
+    document.querySelectorAll('#task-list input[type="checkbox"]').forEach((box, index) => {
+      box.addEventListener('change', () => {
+        localStorage.setItem('daily_cb_' + index, box.checked);
+      });
+    });
+
+    // Highlight current page
+    document.querySelectorAll('.navbar a').forEach(link => {
+      if (window.location.href.includes(link.getAttribute('href'))) {
+        link.classList.add('active');
+      }
+    });
+  </script>
 </body>
 </html>

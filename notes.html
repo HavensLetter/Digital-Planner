@@ -3,18 +3,33 @@
 <head>
   <meta charset="UTF-8">
   <title>Notes</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="daily/styles.css">
 </head>
 <body>
   <div class="navbar">
     <a href="daily.html">Daily</a>
     <a href="weekly.html">Weekly</a>
-    <a href="notes.html" class="active">Notes</a>
+    <a href="notes.html">Notes</a>
   </div>
 
   <main>
     <h1>Notes</h1>
-    <textarea rows="10" cols="40" placeholder="Write your thoughts here..."></textarea>
+    <textarea id="notes" rows="15" placeholder="Write your thoughts here..."></textarea>
   </main>
+
+  <script>
+    const textarea = document.getElementById('notes');
+    textarea.value = localStorage.getItem('notesContent') || "";
+
+    textarea.addEventListener('input', () => {
+      localStorage.setItem('notesContent', textarea.value);
+    });
+
+    document.querySelectorAll('.navbar a').forEach(link => {
+      if (window.location.href.includes(link.getAttribute('href'))) {
+        link.classList.add('active');
+      }
+    });
+  </script>
 </body>
 </html>
