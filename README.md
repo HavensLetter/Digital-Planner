@@ -1,2 +1,0 @@
-# Digital-Planner
-Digital Planner 
