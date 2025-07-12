@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Daily Planner</title>
-<link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css"> <!-- adjust path if CSS is in a folder -->
 </head>
 <body>
   <div class="navbar">
@@ -12,13 +12,10 @@
     <a href="notes.html">Notes</a>
   </div>
 
-  <main>
-    <h1>Today's Tasks</h1>
-    <ul id="task-list">
-      <li><input type="checkbox"> Wake up early</li>
-      <li><input type="checkbox"> Plan meals</li>
-      <li><input type="checkbox"> Review calendar</li>
-    </ul>
-  </main>
+  <ul id="task-list">
+    <li><input type="checkbox"> Wake up at 7AM</li>
+    <li><input type="checkbox"> Review schedule</li>
+    <li><input type="checkbox"> Journal for 10 min</li>
+  </ul>
 </body>
 </html>
