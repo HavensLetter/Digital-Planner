@@ -1,0 +1,36 @@
+body {
+  background-color: #fffaf2;
+  font-family: Georgia, serif;
+  color: #4b3b2a;
+  padding: 20px;
+}
+
+.navbar {
+  background-color: #f9efe2;
+  padding: 10px;
+  text-align: center;
+}
+
+.navbar a {
+  text-decoration: none;
+  color: #4b3b2a;
+  margin: 0 10px;
+  font-weight: bold;
+}
+
+.navbar a.active {
+  background-color: #e6d3b3;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+#task-list {
+  list-style: none;
+  padding: 0;
+  max-width: 400px;
+  margin: 30px auto;
+}
+
+#task-list li {
+  margin-bottom: 10px;
+}
